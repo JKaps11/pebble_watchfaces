@@ -30,11 +30,12 @@ VARIANTS_DIR = os.path.join(PROJECT_ROOT, 'src', 'c', 'variants')
 LAUNCH_SETTLE_SECONDS = 3.0
 COLD_SETTLE_SECONDS = 8.0
 
-# Repeated installs and large jumps of the emulated clock eventually wedge the
-# emulator: installs start reporting "App install failed" and screenshots time
-# out. Nothing recovers it short of a restart, so a Variant that fails to render
-# is retried once on a fresh emulator before giving up. Losing a whole Batch to
-# one wedged emulator is worse than spending ten seconds.
+# Repeated installs eventually wedge the emulator: installs start reporting
+# "App install failed", screenshots time out, and injected state stops landing.
+# It is the persisted flash image that rots, not the process, so `restart_emulator`
+# wipes as well as kills. A Variant that fails to render is retried on a fresh
+# emulator before giving up, because losing a whole Batch to one wedged emulator
+# is worse than spending ten seconds.
 RENDER_ATTEMPTS = 3
 INSTALL_ATTEMPTS = 2
 RETRY_PAUSE_SECONDS = 2.0
@@ -142,10 +143,21 @@ def emulator_pid():
 
 
 def restart_emulator():
-    """Kill the emulator, then boot a fresh one and wait for it."""
+    """Kill the emulator, discard its persisted flash, then boot a fresh one.
+
+    Killing alone does not help, and that is the whole point of this function.
+    The emulator keeps a 32 MB flash image under the SDK's data directory which
+    survives `pebble kill`, and it is what actually degrades: after enough
+    installs, screenshots start timing out and injected state stops landing —
+    and every emulator booted from that image inherits the problem, so restarts
+    look like they do nothing. `pebble wipe` discards the image, and it is the
+    only thing observed to bring a wedged emulator back.
+    """
     subprocess.run(('pebble', 'kill'), cwd=PROJECT_ROOT, capture_output=True,
                    text=True)
     time.sleep(RETRY_PAUSE_SECONDS)
+    subprocess.run(('pebble', 'wipe'), cwd=PROJECT_ROOT, capture_output=True,
+                   text=True)
     ensure_emulator()
 
 
