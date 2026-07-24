@@ -1,6 +1,7 @@
 // dense — everything on at once.
 //
-// Axes: digital · centred · 3–4 complications · mono · LECO · dark-on-light
+// Axes: time-display=digital, composition=centred, complications=3-4,
+//       hue=mono, type=LECO, polarity=dark-on-light
 //
 // Carries every complication the emulator can inject state for, which makes it
 // the Variant that shows whether injected state actually landed. Its density is

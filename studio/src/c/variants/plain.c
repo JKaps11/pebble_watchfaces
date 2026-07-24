@@ -1,6 +1,7 @@
 // plain — the reference Variant.
 //
-// Axes: digital · centred · 0 complications · mono · Gothic · dark-on-light
+// Axes: time-display=digital, composition=centred, complications=0,
+//       hue=mono, type=Gothic, polarity=dark-on-light
 //
 // Deliberately unremarkable. It exists to prove the render path end to end and
 // to give every later Variant something to be compared against, so it is built

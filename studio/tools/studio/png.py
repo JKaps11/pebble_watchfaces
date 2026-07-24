@@ -12,8 +12,12 @@ import zlib
 
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
 
-# (channels per pixel) for the colour types the emulator and this module produce.
-_CHANNELS = {2: 3, 6: 4}
+# Bytes per pixel for the colour types read here: truecolour, truecolour with
+# alpha, and palette. Palette is included because a Contact sheet of 64-colour
+# framebuffers comes out of ImageMagick indexed, and it is committed — leaving it
+# indexed keeps the kept record cheap, which is the point of keeping it.
+_CHANNELS = {2: 3, 6: 4, 3: 1}
+_PALETTE = 3
 
 
 class UnsupportedPNG(Exception):
@@ -100,10 +104,13 @@ def read(path):
         data = handle.read()
 
     header = None
+    palette = None
     compressed = bytearray()
     for kind, body in _chunks(data):
         if kind == b'IHDR':
             header = struct.unpack('>IIBBBBB', body[:13])
+        elif kind == b'PLTE':
+            palette = [tuple(body[i:i + 3]) for i in range(0, len(body), 3)]
         elif kind == b'IDAT':
             compressed += body
 
@@ -119,11 +126,18 @@ def read(path):
 
     channels = _CHANNELS[colour_type]
     lines = _unfilter(zlib.decompress(bytes(compressed)), width, height, channels)
-    rows = tuple(
-        tuple((line[i], line[i + 1], line[i + 2])
-              for i in range(0, width * channels, channels))
-        for line in lines
-    )
+
+    if colour_type == _PALETTE:
+        if palette is None:
+            raise UnsupportedPNG('palette image with no PLTE chunk')
+        rows = tuple(tuple(palette[index] for index in line[:width])
+                     for line in lines)
+    else:
+        rows = tuple(
+            tuple((line[i], line[i + 1], line[i + 2])
+                  for i in range(0, width * channels, channels))
+            for line in lines
+        )
     return Image(width, height, rows)
 
 
