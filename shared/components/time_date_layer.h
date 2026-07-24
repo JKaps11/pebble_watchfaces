@@ -10,4 +10,4 @@ Layer *time_date_layer_create(GRect frame);
 void time_date_layer_destroy(Layer *layer);
 
 // Reformats and redraws the layer for the given time.
-void time_date_layer_update_time(Layer *layer, struct tm *tick_time);
+void time_date_layer_update(Layer *layer, struct tm *tick_time);

@@ -34,7 +34,7 @@ void time_date_layer_destroy(Layer *layer) {
   layer_destroy(layer);
 }
 
-void time_date_layer_update_time(Layer *layer, struct tm *tick_time) {
+void time_date_layer_update(Layer *layer, struct tm *tick_time) {
   TimeDateLayerData *data = (TimeDateLayerData *)layer_get_data(layer);
   DateTimeInfo time_info = {
     .hour = tick_time->tm_hour,

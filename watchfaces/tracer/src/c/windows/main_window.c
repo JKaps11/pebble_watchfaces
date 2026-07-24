@@ -6,7 +6,7 @@ static Window *s_window;
 static Layer *s_time_date_layer;
 
 static void prv_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  time_date_layer_update_time(s_time_date_layer, tick_time);
+  time_date_layer_update(s_time_date_layer, tick_time);
 }
 
 static void prv_window_load(Window *window) {
@@ -18,7 +18,7 @@ static void prv_window_load(Window *window) {
 
   time_t now = time(NULL);
   struct tm *tick_time = localtime(&now);
-  time_date_layer_update_time(s_time_date_layer, tick_time);
+  time_date_layer_update(s_time_date_layer, tick_time);
 
   tick_timer_service_subscribe(MINUTE_UNIT, prv_tick_handler);
 }
