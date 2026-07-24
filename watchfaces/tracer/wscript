@@ -46,7 +46,11 @@ def build(ctx):
         ctx.env = ctx.all_envs[platform]
         ctx.set_group(ctx.env.PLATFORM_NAME)
         app_elf = '{}/pebble-app.elf'.format(ctx.env.BUILD_DIR)
-        ctx.pbl_build(source=app_sources, target=app_elf, bin_type='app',
+        # pbl_build appends this platform's generated sources (appinfo.auto.c,
+        # resource_ids.auto.c) onto the list it is handed, so each iteration must
+        # get its own copy. Sharing one list links platform N's generated
+        # app-info into platform N+1 and fails on a duplicate __pbl_app_info.
+        ctx.pbl_build(source=list(app_sources), target=app_elf, bin_type='app',
                       includes=[SHARED_C, SHARED_COMPONENTS])
 
         if build_worker:
