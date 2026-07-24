@@ -1,0 +1,70 @@
+#
+# Build rules for the Studio.
+#
+# Two things differ from a watchface's wscript. Only the Variant named by
+# STUDIO_VARIANT is compiled, so that a half-finished sibling cannot stop the
+# selected one rendering. And the per-platform loop hands pbl_build a fresh copy
+# of the source list, because pbl_build appends that platform's generated
+# sources onto whatever list it is given (see issue #13).
+#
+import os
+
+top = '.'
+out = 'build'
+
+SHARED_C = '../shared/c'
+SHARED_COMPONENTS = '../shared/components'
+
+VARIANTS_DIR = 'src/c/variants'
+DEFAULT_VARIANT = 'plain'
+
+
+def _selected_variant(ctx):
+    """Which Variant to compile. Set with STUDIO_VARIANT=<name> pebble build."""
+    name = os.environ.get('STUDIO_VARIANT', DEFAULT_VARIANT)
+    node = ctx.path.find_node('{}/{}.c'.format(VARIANTS_DIR, name))
+    if node is None:
+        available = sorted(
+            n.name[:-2] for n in ctx.path.find_node(VARIANTS_DIR).ant_glob('*.c'))
+        ctx.fatal('No Variant named {!r} in {}/. Available: {}'.format(
+            name, VARIANTS_DIR, ', '.join(available) or '(none)'))
+    return name, node
+
+
+def options(ctx):
+    ctx.load('pebble_sdk')
+
+
+def configure(ctx):
+    ctx.load('pebble_sdk')
+
+
+def build(ctx):
+    ctx.load('pebble_sdk')
+
+    variant_name, variant_node = _selected_variant(ctx)
+
+    app_sources = ctx.path.ant_glob('src/c/*.c') + [variant_node]
+    for shared in (SHARED_C, SHARED_COMPONENTS):
+        node = ctx.path.find_node(shared)
+        if node:
+            app_sources += node.ant_glob('**/*.c')
+
+    binaries = []
+    cached_env = ctx.env
+    for platform in ctx.env.TARGET_PLATFORMS:
+        ctx.env = ctx.all_envs[platform]
+        ctx.set_group(ctx.env.PLATFORM_NAME)
+        ctx.env.append_value(
+            'DEFINES', 'STUDIO_VARIANT_NAME="{}"'.format(variant_name))
+        app_elf = '{}/pebble-app.elf'.format(ctx.env.BUILD_DIR)
+        ctx.pbl_build(source=list(app_sources), target=app_elf, bin_type='app',
+                      includes=[SHARED_C, SHARED_COMPONENTS])
+        binaries.append({'platform': platform, 'app_elf': app_elf})
+    ctx.env = cached_env
+
+    ctx.set_group('bundle')
+    ctx.pbl_bundle(binaries=binaries,
+                   js=ctx.path.ant_glob(['src/pkjs/**/*.js',
+                                         'src/pkjs/**/*.json']),
+                   js_entry_file='src/pkjs/index.js')

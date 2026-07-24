@@ -1,0 +1,23 @@
+{
+  "name": "studio",
+  "author": "Joshua Kaplan",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "studio",
+    "uuid": "4fe6d63c-08ec-47d9-9fe1-4716fef83742",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "resources": {
+      "media": []
+    }
+  }
+}
