@@ -1,0 +1,3 @@
+# Use C, not Alloy, for watchface implementation
+
+Pebble 2 supports two watchface languages: native C (the traditional, mature SDK path) and Alloy, a new JS/TS SDK built on Moddable's XS engine. Alloy is still in "Developer Preview" per Rebble's own docs, with a smaller ecosystem and less proven stability. We chose C because it's the mature, native path — matching Core Devices' own official tooling (their `pebble-watchface-agent-skill`) — and accepted its constraints (no floating point, manual memory layout) in exchange for stability and performance. Revisit if Alloy graduates out of preview and its constraints become a real burden.

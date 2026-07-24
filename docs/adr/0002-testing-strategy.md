@@ -1,0 +1,3 @@
+# Screenshot-based integration testing plus host-side Unity unit tests
+
+Pebble's ecosystem has no on-device unit testing framework — Core Devices' own official tooling verifies watchfaces by building, running them in the bundled QEMU emulator, and capturing screenshots via `pebble screenshot` for visual verification. We follow that for integration-level testing. Additionally, we pull pure logic (date/time formatting, battery helpers, layout math) out of watchface code into `shared/c/`, free of Pebble SDK dependencies, and test it on the host with Unity — something the ecosystem doesn't do by default. This gives fast, deterministic tests for logic bugs while still relying on screenshots to catch rendering/visual regressions that host tests can't see.

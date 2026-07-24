@@ -1,0 +1,3 @@
+# Monorepo of independent watchface projects sharing logic via hand-edited wscript
+
+This repo holds multiple watchfaces, each its own independent Pebble project (own `wscript`/`package.json`/`build/`) so `pebble-tool` works unmodified per-project. Pebble's Waf-based build system has no native workspace/monorepo concept, so common logic (date/time formatting, battery helpers) lives in `shared/c/` and each watchface's `wscript` is manually edited to add `../../shared/c` as an extra source and include path — a DIY pattern, not an SDK feature. Chosen over duplicating logic per watchface (drift risk) or symlinking SDK-style (unnecessary here since everything lives in one repo and relative paths suffice).
