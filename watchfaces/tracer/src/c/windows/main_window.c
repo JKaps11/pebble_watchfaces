@@ -1,21 +1,31 @@
 #include <pebble.h>
 #include "main_window.h"
+#include "time_date_layer.h"
 
 static Window *s_window;
-static TextLayer *s_placeholder_layer;
+static Layer *s_time_date_layer;
+
+static void prv_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  time_date_layer_update_time(s_time_date_layer, tick_time);
+}
 
 static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_placeholder_layer = text_layer_create(GRect(0, bounds.size.h / 2 - 10, bounds.size.w, 20));
-  text_layer_set_text(s_placeholder_layer, "tracer");
-  text_layer_set_text_alignment(s_placeholder_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(s_placeholder_layer));
+  s_time_date_layer = time_date_layer_create(bounds);
+  layer_add_child(window_layer, s_time_date_layer);
+
+  time_t now = time(NULL);
+  struct tm *tick_time = localtime(&now);
+  time_date_layer_update_time(s_time_date_layer, tick_time);
+
+  tick_timer_service_subscribe(MINUTE_UNIT, prv_tick_handler);
 }
 
 static void prv_window_unload(Window *window) {
-  text_layer_destroy(s_placeholder_layer);
+  tick_timer_service_unsubscribe();
+  time_date_layer_destroy(s_time_date_layer);
 }
 
 void main_window_push(void) {
