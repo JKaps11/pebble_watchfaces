@@ -2,3 +2,5 @@ build/
 node_modules/
 *.pbw
 .lock-waf_*
+__pycache__/
+*.pyc
