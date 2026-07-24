@@ -26,6 +26,8 @@ void datetime_format_time(const struct tm *time_info, bool use_24h, char *buffer
 }
 
 void datetime_format_date(const struct tm *time_info, char *buffer, size_t buffer_size) {
+  // Caller must supply a valid struct tm (tm_wday in [0,6], tm_mon in [0,11]);
+  // the modulo below is a defensive clamp, not a documented tolerance for bad input.
   const char *weekday = WEEKDAY_NAMES[time_info->tm_wday % 7];
   const char *month = MONTH_NAMES[time_info->tm_mon % 12];
   snprintf(buffer, buffer_size, "%s %s %d", weekday, month, time_info->tm_mday);
