@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from studio import batch, render, states
+from studio import batch, render, report, states
 
 
 def _render(args):
@@ -12,10 +12,17 @@ def _render(args):
 
 
 def _batch(args):
+    # The report is built here rather than inside render_batch so that batch
+    # does not have to import report, which reads batch to find the renders.
     result = batch.render_batch(
         args.session, args.variants,
         on_progress=lambda variant: print('rendered', variant, flush=True))
     print('contact sheet:', result['contact_sheet'])
+    print('report:', report.build(args.session, variants=args.variants))
+
+
+def _report(args):
+    print(report.build(args.session))
 
 
 def main(argv=None):
@@ -36,6 +43,11 @@ def main(argv=None):
     batch_command.add_argument('variants', nargs='+',
                                help='The six Variants in the Batch')
     batch_command.set_defaults(handler=_batch)
+
+    report_command = commands.add_parser(
+        'report', help='Rebuild the report for a Session already rendered.')
+    report_command.add_argument('session')
+    report_command.set_defaults(handler=_report)
 
     args = parser.parse_args(argv)
     if args.command == 'render' and args.output is None:

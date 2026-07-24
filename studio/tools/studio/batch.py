@@ -129,6 +129,16 @@ def _write_manifest(session, variants):
     return manifest
 
 
+def read_manifest(session):
+    """What was in a Batch, as recorded when it was rendered."""
+    path = os.path.join(session_dir(session), MANIFEST_NAME)
+    try:
+        with open(path) as handle:
+            return json.load(handle)
+    except FileNotFoundError:
+        raise BatchError('No Batch recorded at {}'.format(path)) from None
+
+
 def render_batch(session, variants, on_progress=None):
     """Render a whole Batch into a Session and tile its Contact sheet."""
     variants = list(variants)
