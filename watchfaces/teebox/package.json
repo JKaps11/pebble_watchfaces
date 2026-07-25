@@ -1,0 +1,30 @@
+{
+  "name": "teebox",
+  "author": "Joshua Kaplan",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "teebox",
+    "uuid": "fc40d63d-e597-4b6e-907d-ae330d634716",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "FONT_BARLOW_52",
+          "file": "../../../shared/resources/fonts/BarlowCondensed-Bold.ttf",
+          "characterRegex": "[0-9: APM]"
+        }
+      ]
+    }
+  }
+}

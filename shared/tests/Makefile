@@ -2,19 +2,20 @@ CC := cc
 CFLAGS := -std=c11 -Wall -Wextra -I../c -Ivendor/unity
 
 BUILD_DIR := build
-BIN := $(BUILD_DIR)/run_tests
+UNITY := vendor/unity/unity.c
 
-SRCS := test_datetime_format.c \
-        vendor/unity/unity.c \
-        ../c/datetime_format.c
+# One binary per suite: Unity gives each test file its own main, so they cannot
+# be linked together.
+SUITES := datetime_format golf_perspective
+BINS := $(addprefix $(BUILD_DIR)/test_,$(SUITES))
 
 .PHONY: test clean
 
-test: $(BIN)
-	./$(BIN)
+test: $(BINS)
+	@for bin in $(BINS); do echo "--- $$bin"; ./$$bin || exit 1; done
 
-$(BIN): $(SRCS) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(SRCS) -o $(BIN)
+$(BUILD_DIR)/test_%: test_%.c ../c/%.c $(UNITY) | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)

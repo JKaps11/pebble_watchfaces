@@ -1,0 +1,71 @@
+#
+# This file is the default set of rules to compile a Pebble application.
+#
+# Feel free to customize this to your needs.
+#
+import os.path
+
+top = '.'
+out = 'build'
+
+
+def options(ctx):
+    ctx.load('pebble_sdk')
+
+
+def configure(ctx):
+    """
+    This method is used to configure your build. ctx.load(`pebble_sdk`) automatically configures
+    a build for each valid platform in `targetPlatforms`. Platform-specific configuration: add your
+    change after calling ctx.load('pebble_sdk') and make sure to set the correct environment first.
+    Universal configuration: add your change prior to calling ctx.load('pebble_sdk').
+    """
+    ctx.load('pebble_sdk')
+
+
+SHARED_C = '../../shared/c'
+SHARED_COMPONENTS = '../../shared/components'
+
+
+def build(ctx):
+    ctx.load('pebble_sdk')
+
+    build_worker = os.path.exists('worker_src')
+    binaries = []
+
+    app_sources = ctx.path.ant_glob('src/c/**/*.c')
+    shared_c_node = ctx.path.find_node(SHARED_C)
+    if shared_c_node:
+        app_sources += shared_c_node.ant_glob('**/*.c')
+    shared_components_node = ctx.path.find_node(SHARED_COMPONENTS)
+    if shared_components_node:
+        app_sources += shared_components_node.ant_glob('**/*.c')
+
+    cached_env = ctx.env
+    for platform in ctx.env.TARGET_PLATFORMS:
+        ctx.env = ctx.all_envs[platform]
+        ctx.set_group(ctx.env.PLATFORM_NAME)
+        app_elf = '{}/pebble-app.elf'.format(ctx.env.BUILD_DIR)
+        # pbl_build appends this platform's generated sources (appinfo.auto.c,
+        # resource_ids.auto.c) onto the list it is handed, so each iteration must
+        # get its own copy. Sharing one list links platform N's generated
+        # app-info into platform N+1 and fails on a duplicate __pbl_app_info.
+        ctx.pbl_build(source=list(app_sources), target=app_elf, bin_type='app',
+                      includes=[SHARED_C, SHARED_COMPONENTS])
+
+        if build_worker:
+            worker_elf = '{}/pebble-worker.elf'.format(ctx.env.BUILD_DIR)
+            binaries.append({'platform': platform, 'app_elf': app_elf, 'worker_elf': worker_elf})
+            ctx.pbl_build(source=ctx.path.ant_glob('worker_src/c/**/*.c'),
+                          target=worker_elf,
+                          bin_type='worker')
+        else:
+            binaries.append({'platform': platform, 'app_elf': app_elf})
+    ctx.env = cached_env
+
+    ctx.set_group('bundle')
+    ctx.pbl_bundle(binaries=binaries,
+                   js=ctx.path.ant_glob(['src/pkjs/**/*.js',
+                                         'src/pkjs/**/*.json',
+                                         'src/common/**/*.js']),
+                   js_entry_file='src/pkjs/index.js')

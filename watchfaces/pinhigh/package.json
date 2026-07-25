@@ -1,0 +1,30 @@
+{
+  "name": "pinhigh",
+  "author": "Joshua Kaplan",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "pinhigh",
+    "uuid": "1790ce4a-6a3d-4981-b100-c7670a2e22f1",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "FONT_BARLOW_52",
+          "file": "../../../shared/resources/fonts/BarlowCondensed-Bold.ttf",
+          "characterRegex": "[0-9: APM]"
+        }
+      ]
+    }
+  }
+}
