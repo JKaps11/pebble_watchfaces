@@ -19,7 +19,38 @@
       "watchface": true
     },
     "resources": {
-      "media": []
+      "media": [
+        {
+          "type": "font",
+          "name": "FONT_SILKSCREEN_38",
+          "file": "fonts/Silkscreen-Regular.ttf",
+          "characterRegex": "[0-9: APM]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_ARCHIVO_44",
+          "file": "fonts/ArchivoBlack-Regular.ttf",
+          "characterRegex": "[0-9: APM]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_BARLOW_52",
+          "file": "fonts/BarlowCondensed-Bold.ttf",
+          "characterRegex": "[0-9: APM]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_SHARETECH_46",
+          "file": "fonts/ShareTechMono-Regular.ttf",
+          "characterRegex": "[0-9: APM]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_WALLPOET_44",
+          "file": "fonts/Wallpoet-Regular.ttf",
+          "characterRegex": "[0-9: APM]"
+        }
+      ]
     }
   }
 }

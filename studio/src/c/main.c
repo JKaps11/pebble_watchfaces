@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "studio_font.h"
 #include "variant.h"
 
 static Window *s_window;
@@ -25,6 +26,8 @@ static void prv_window_load(Window *window) {
 static void prv_window_unload(Window *window) {
   tick_timer_service_unsubscribe();
   s_variant->unload(window);
+  // Released here so a Variant using custom fonts never has to remember to.
+  studio_font_unload_all();
 }
 
 int main(void) {
