@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-fennec-aerial",
+  "batch": 3,
+  "variants": [
+    {
+      "name": "goalmouth",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/goalmouth_canonical.png",
+        "stress": "renders/goalmouth_stress.png"
+      }
+    },
+    {
+      "name": "stands",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/stands_canonical.png",
+        "stress": "renders/stands_stress.png"
+      }
+    },
+    {
+      "name": "tunnel",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/tunnel_canonical.png",
+        "stress": "renders/tunnel_stress.png"
+      }
+    },
+    {
+      "name": "nightgame",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/nightgame_canonical.png",
+        "stress": "renders/nightgame_stress.png"
+      }
+    },
+    {
+      "name": "blueprint",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "mono",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/blueprint_canonical.png",
+        "stress": "renders/blueprint_stress.png"
+      }
+    },
+    {
+      "name": "floodlit",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/floodlit_canonical.png",
+        "stress": "renders/floodlit_stress.png"
+      }
+    }
+  ]
+}

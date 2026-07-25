@@ -1,0 +1,71 @@
+# Session 2026-07-25-fennec-aerial — Batch 4
+
+![Contact sheet](contact-sheet.png)
+
+## Findings
+
+Only failures and flags appear here. A Variant with nothing against it measured clean.
+
+**Not viable as they stand:** `goalmouth`, `liftoff`, `apex`, `lowline`, `blueprint`, `offside`.
+
+### goalmouth
+
+`digital · split · 1-2 · multi · custom · light-on-dark`
+
+- **contrast** — time element at 1.3:1 against its ground, below the 7.0:1 floor _(at the stress state)_
+- **clipping** — something is drawn on the outermost row or column, so it is cut off _(at the stress state)_
+- **ink coverage** — 56% of pixels are inked, a dense design _(at the canonical state)_
+- **safe margin** — nearest element is 0 px from the display edge, below 8 px _(at the canonical state)_
+
+Carried over unchanged as the reference the other five are measured against, and it still holds up: the split keeps the type on clean black, the small goal against the big car gives the depth, and nothing in the scene reaches the numerals. It is the only tile here where the car is unambiguously driving rather than flying, which after this Batch reads as the conservative choice rather than the neutral one.
+
+### liftoff
+
+`digital · split · 1-2 · multi · custom · light-on-dark`
+
+- **contrast** — time element at 1.3:1 against its ground, below the 7.0:1 floor _(at the stress state)_
+- **clipping** — something is drawn on the outermost row or column, so it is cut off _(at the stress state)_
+- **ink coverage** — 58% of pixels are inked, a dense design _(at the canonical state)_
+- **safe margin** — nearest element is 0 px from the display edge, below 8 px _(at the canonical state)_
+
+What the brief asked for, and it took swapping the car to get it. A rear view carries no pitch at all — end-on, a nose pointed at the sky looks identical to one pointed at the goal, and squashing it to compensate reads as skimming the floor. The profile car turned sixty degrees says it in one shape and the shadow left behind on the ground confirms it. The price is that the car no longer faces down the pitch, so this tile has the best aerial and the weakest use of the new vantage.
+
+### apex
+
+`digital · centred · 1-2 · multi · custom · light-on-dark`
+
+- **contrast** — time element at 2.2:1 against its ground, below the 7.0:1 floor _(at the stress state)_
+- **clipping** — something is drawn on the outermost row or column, so it is cut off _(at the stress state)_
+- **ink coverage** — 44% of pixels are inked, a dense design _(at the canonical state)_
+- **safe margin** — nearest element is 0 px from the display edge, below 8 px _(at the canonical state)_
+
+The centred position, and the scene fights it hardest: the middle of the display is where the horizon and the goal want to be, so the only way to seat the numerals there was to drop the horizon to 186 and hand the top two thirds back to black. The type is perfectly legible as a result and the arena is a strip along the bottom with no room to be an arena. Proof that centred and this vantage want the same real estate.
+
+### lowline
+
+`digital · corner-anchored · 1-2 · multi · custom · light-on-dark`
+
+- **contrast** — time element at 2.2:1 against its ground, below the 7.0:1 floor _(at the stress state)_
+- **clipping** — something is drawn on the outermost row or column, so it is cut off _(at the stress state)_
+- **safe margin** — nearest element is 0 px from the display edge, below 8 px _(at the canonical state)_
+
+Beside blueprint this is the whole experiment, and it loses. Same horizon, same goal, same car, same cleared corner, same face — the only difference is fills versus lines, and the filled version is not more readable, only heavier. It does keep one thing blueprint cannot: the goal is orange, so which end of the pitch you are attacking is visible at a glance.
+
+### blueprint
+
+`digital · corner-anchored · 1-2 · mono · custom · light-on-dark`
+
+- **clipping** — something is drawn on the outermost row or column, so it is cut off _(at the stress state)_
+- **safe margin** — nearest element is 0 px from the display edge, below 8 px _(at the canonical state)_
+
+Holds its own against lowline exactly as suspected, which settles the question this Batch was built to ask — the convergence was carrying the depth all along, and the walls, crowds and colour elsewhere in the Session were decoration on top of it. Still the only tile with no contrast failure against it. Still the least Rocket League thing here, and that is now a deliberate choice rather than a limitation.
+
+### offside
+
+`digital · asymmetric · 1-2 · multi · custom · light-on-dark`
+
+- **contrast** — time element at 2.2:1 against its ground, below the 7.0:1 floor _(at the stress state)_
+- **clipping** — something is drawn on the outermost row or column, so it is cut off _(at the stress state)_
+- **safe margin** — nearest element is 0 px from the display edge, below 8 px _(at the canonical state)_
+
+The asymmetric position, and the least successful of the four. This scene is a convergence on one point, so throwing the car and the ball off that point means working against the background rather than with it — the vanishing point stays stubbornly in the middle and the composition reads as a centred scene with things pushed out of place. The bottom-right type block is fine on its own; it just is not what makes this tile asymmetric.
