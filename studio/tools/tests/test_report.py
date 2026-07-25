@@ -7,6 +7,7 @@ Canonical state and clips at the Stress state must be reported as clipping, and
 one that crowds the edge only in the Stress render must not be reported for it.
 """
 
+import json
 import os
 import tempfile
 import unittest
@@ -131,6 +132,61 @@ class ReportShapeTest(ReportTestCase):
 
         self.assertIn('Reads as generic.', text)
         self.assertIn('clipping', text)
+
+
+class CritiqueAndPickTest(ReportTestCase):
+    """The skill's half of the report: judgment, and which one won."""
+
+    def setUp(self):
+        super().setUp()
+        self.place_both(CLEAN, clean_canvas(), clean_canvas())
+        self.place_both(OFFENDING, clean_canvas(), clipping_canvas())
+        manifest = {'session': self.session,
+                    'variants': [{'name': CLEAN}, {'name': OFFENDING}]}
+        path = os.path.join(batch.session_dir(self.session), batch.MANIFEST_NAME)
+        with open(path, 'w') as handle:
+            json.dump(manifest, handle)
+
+    def write_side_file(self, name, contents):
+        with open(os.path.join(batch.session_dir(self.session), name),
+                  'w') as handle:
+            json.dump(contents, handle)
+
+    def test_critique_written_beside_the_renders_survives_a_rebuild(self):
+        # Rebuilding a report from the renders must not discard the judgment
+        # written about them, which is why critique is data and not prose edited
+        # into the Markdown.
+        self.write_side_file(report.CRITIQUE_NAME, {CLEAN: 'Quietly confident.'})
+        path = report.build(self.session)
+
+        with open(path) as handle:
+            self.assertIn('Quietly confident.', handle.read())
+
+    def test_recording_a_pick_names_the_winner_and_closes_the_session(self):
+        path = report.record_pick(self.session, CLEAN, why='Best of the six.')
+
+        with open(path) as handle:
+            text = handle.read()
+        self.assertIn('## Pick', text)
+        self.assertIn(CLEAN, text.split('## Pick')[1])
+        self.assertIn('Best of the six.', text)
+
+    def test_a_pick_outside_the_batch_is_refused(self):
+        with self.assertRaises(batch.BatchError) as raised:
+            report.record_pick(self.session, 'dial')
+        self.assertIn('dial', str(raised.exception))
+
+    def test_a_session_with_no_pick_has_no_pick_section(self):
+        with open(report.build(self.session)) as handle:
+            self.assertNotIn('## Pick', handle.read())
+
+    def test_picking_produces_no_further_artefact(self):
+        # Picking records the pick and ends the Session. Nothing else.
+        before = set(os.listdir(batch.session_dir(self.session)))
+        report.record_pick(self.session, CLEAN)
+        after = set(os.listdir(batch.session_dir(self.session)))
+
+        self.assertEqual(after - before, {report.PICK_NAME, report.REPORT_NAME})
 
 
 if __name__ == '__main__':

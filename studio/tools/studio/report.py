@@ -11,11 +11,18 @@ catching. Hierarchy, ink coverage and safe margin are taken from the Canonical
 render, because that is the design being compared on the Contact sheet.
 """
 
+import json
 import os
 
 from studio import axes, batch, metrics, render, states
 
 REPORT_NAME = 'report.md'
+
+# Written by the skill, read back when the report is built. Kept as data rather
+# than edited into the Markdown so that rebuilding a report from the renders
+# never throws away the judgment written about them.
+CRITIQUE_NAME = 'critique.json'
+PICK_NAME = 'pick.json'
 
 # Where each measurement is taken from. metrics owns the split; this is the
 # mapping from that split to the render it implies.
@@ -65,9 +72,37 @@ def _variant_section(session, variant, critique=None):
     return lines
 
 
+def _read_side_file(session, name):
+    try:
+        with open(os.path.join(batch.session_dir(session), name)) as handle:
+            return json.load(handle)
+    except (FileNotFoundError, ValueError):
+        return None
+
+
+def record_pick(session, variant, why=None):
+    """Record which Variant won. This is all that picking a winner produces.
+
+    No specification, no scaffolded watchface — building a real one from the
+    direction is separate, manual work outside this flow.
+    """
+    known = [entry['name'] for entry in batch.read_manifest(session)['variants']]
+    if variant not in known:
+        raise batch.BatchError(
+            '{!r} is not in this Batch. It holds: {}.'.format(
+                variant, ', '.join(known)))
+
+    path = os.path.join(batch.session_dir(session), PICK_NAME)
+    with open(path, 'w') as handle:
+        json.dump({'variant': variant, 'why': why}, handle, indent=2)
+        handle.write('\n')
+    return build(session)
+
+
 def build(session, critiques=None, variants=None):
     """Write the Session's report next to its Contact sheet. Returns the path."""
-    critiques = critiques or {}
+    if critiques is None:
+        critiques = _read_side_file(session, CRITIQUE_NAME) or {}
     if variants is None:
         variants = [entry['name']
                     for entry in batch.read_manifest(session)['variants']]
@@ -94,6 +129,13 @@ def build(session, critiques=None, variants=None):
         lines += ['**Not viable as they stand:** {}.'.format(
             ', '.join('`{}`'.format(name) for name in failing)), '']
     lines += sections
+
+    pick = _read_side_file(session, PICK_NAME)
+    if pick:
+        lines += ['## Pick', '', '**{}**'.format(pick['variant'])]
+        if pick.get('why'):
+            lines += ['', pick['why'].strip()]
+        lines += ['', 'Session closed.', '']
 
     path = os.path.join(batch.session_dir(session), REPORT_NAME)
     os.makedirs(os.path.dirname(path), exist_ok=True)

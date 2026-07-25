@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from studio import batch, render, report, states
+from studio import axes, batch, render, report, states
 
 
 def _render(args):
@@ -23,6 +23,17 @@ def _batch(args):
 
 def _report(args):
     print(report.build(args.session))
+
+
+def _pick(args):
+    print(report.record_pick(args.session, args.variant, args.why))
+
+
+def _variants(args):
+    for variant in render.available_variants():
+        positions = axes.positions_of(variant, render.VARIANTS_DIR)
+        print('{:12} {}'.format(
+            variant, ' · '.join(positions[axis] for axis in axes.AXIS_ORDER)))
 
 
 def main(argv=None):
@@ -48,6 +59,17 @@ def main(argv=None):
         'report', help='Rebuild the report for a Session already rendered.')
     report_command.add_argument('session')
     report_command.set_defaults(handler=_report)
+
+    pick_command = commands.add_parser(
+        'pick', help='Record the winning Variant and close the Session.')
+    pick_command.add_argument('session')
+    pick_command.add_argument('variant')
+    pick_command.add_argument('--why', default=None)
+    pick_command.set_defaults(handler=_pick)
+
+    variants_command = commands.add_parser(
+        'variants', help='List the Variants in the Studio.')
+    variants_command.set_defaults(handler=_variants)
 
     args = parser.parse_args(argv)
     if args.command == 'render' and args.output is None:
