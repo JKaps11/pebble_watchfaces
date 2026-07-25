@@ -338,6 +338,19 @@ class FindingsTest(unittest.TestCase):
                   .rect(40, 160, 120, 20, BLACK))
         self.assertIn('glance hierarchy', self.measurements_reported(canvas))
 
+    def test_only_clipping_and_contrast_can_make_a_variant_unusable(self):
+        # The spec flags weak hierarchy and calls out no clear primary; neither
+        # is a failure. A design with no dominant element may be exactly what
+        # was asked for. Clipping and contrast are the two that disqualify.
+        canvas = (Canvas()
+                  .rect(40, 20, 120, 21, BLACK)     # 1.05x: no clear primary
+                  .rect(40, 160, 120, 20, BLACK))
+        measured = self.measure(canvas)
+
+        self.assertTrue(measured.no_clear_primary)
+        self.assertEqual(
+            [f.measurement for f in measured.findings if f.is_failure], [])
+
     def test_every_finding_says_what_is_wrong(self):
         canvas = Canvas().rect(0, 0, WIDTH, HEIGHT // 2, GREY_6_90)
         for finding in self.measure(canvas).findings:
@@ -345,33 +358,44 @@ class FindingsTest(unittest.TestCase):
 
 
 class RealRenderSmokeTest(unittest.TestCase):
-    """Loose assertions against a render the emulator actually produced.
+    """Loose assertions against renders the emulator actually produced.
 
-    Synthetic fixtures are solid rectangles; real ones are glyphs. This exists to
+    Synthetic fixtures are solid rectangles; real ones are glyphs. These exist to
     catch the case where the two diverge — not to pin down numbers, which is what
-    the synthetic tests are for.
+    the synthetic tests are for. Both states are covered, because the Stress
+    render is the one the failing measurements are read from and its longer
+    strings are where synthetic rectangles are least like the real thing.
     """
 
-    def setUp(self):
-        self.measured = metrics.measure(
-            os.path.join(os.path.dirname(__file__), 'renders',
-                         'plain_canonical.png'))
+    def measure(self, name):
+        return metrics.measure(
+            os.path.join(os.path.dirname(__file__), 'renders', name))
 
-    def test_every_measurement_comes_back(self):
-        self.assertGreater(self.measured.ink_coverage, 0)
-        self.assertIsNotNone(self.measured.safe_margin)
-        self.assertIsNotNone(self.measured.glance_hierarchy)
-        self.assertIsNotNone(self.measured.clipping)
-        for element in self.measured.elements:
-            self.assertGreater(element.contrast, 0)
+    def test_every_measurement_comes_back_for_both_states(self):
+        for name in ('plain_canonical.png', 'plain_stress.png'):
+            with self.subTest(render=name):
+                measured = self.measure(name)
+                self.assertGreater(measured.ink_coverage, 0)
+                self.assertIsNotNone(measured.safe_margin)
+                self.assertIsNotNone(measured.glance_hierarchy)
+                self.assertIsNotNone(measured.clipping)
+                for element in measured.elements:
+                    self.assertGreater(element.contrast, 0)
 
     def test_glyph_runs_are_found_as_elements_not_as_glyphs(self):
-        # "10:09" and "Fri Jul 24" — two elements, not a dozen.
-        self.assertEqual(len(self.measured.elements), 2)
+        # "10:09" and "Tue Jun 16" — two elements, not a dozen.
+        self.assertEqual(len(self.measure('plain_canonical.png').elements), 2)
 
-    def test_a_known_good_render_reports_no_failures(self):
-        self.assertEqual(
-            [f.detail for f in self.measured.findings if f.is_failure], [])
+    def test_the_longest_date_still_reads_as_one_element(self):
+        # "Wed Sep 30" at the Stress state: three words, still one run.
+        self.assertEqual(len(self.measure('plain_stress.png').elements), 2)
+
+    def test_known_good_renders_report_no_failures(self):
+        for name in ('plain_canonical.png', 'plain_stress.png'):
+            with self.subTest(render=name):
+                self.assertEqual(
+                    [f.detail for f in self.measure(name).findings
+                     if f.is_failure], [])
 
 
 if __name__ == '__main__':

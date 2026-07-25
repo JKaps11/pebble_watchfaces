@@ -29,6 +29,14 @@ rest fixed.
 when the direction is settled and one detail is unresolved; answers *how much of
 this?* Vary **exactly one** axis.
 
+A Batch is six but no axis has six positions — the widest have four. So a Sweep
+covers every position on its axis and spends the remaining tiles on degrees
+within those positions: a `type` sweep might run LECO, Bitham, Gothic and three
+different custom faces; a `complications` sweep might run 0, 1, 2, 3, 4 and 6.
+The axis position declared on each Variant is still one of the four, and the
+tiles still differ only along that axis. Do not pad a Sweep by varying a second
+axis — that makes it a small Spread and answers neither question.
+
 If the user does not say, infer: a vague brief means Spread; a brief naming an
 existing Variant and something to vary means Sweep. Say which you chose in one
 short sentence, and get on with it.
@@ -65,8 +73,12 @@ Work from `studio/tools/` — every command below assumes that directory.
 5. **Show the user the Contact sheet** and the findings from the report. Lead
    with the picture.
 
-6. **Another Batch, or a pick.** Another Batch is a new Session name against the
-   same brief. A pick ends it:
+6. **Another Batch, or a pick.** A Session is one sitting against one brief and
+   holds as many Batches as it takes. Run `batch` again with the *same* Session
+   name — it lands in `batch-2/` beside `batch-1/`, and the emulator stays warm.
+   Only start a new Session when the brief itself changes.
+
+   A pick ends the Session, and may name a Variant from any of its Batches:
 
    ```sh
    python3 -m studio pick <session> <variant> --why "..."

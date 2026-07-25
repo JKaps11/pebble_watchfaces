@@ -4,10 +4,26 @@ A pure function from a framebuffer PNG to numbers. The eye is bad at contrast
 ratios and worse at noticing a date that clips one pixel off the edge, so these
 measurements exist to be believed when they contradict what the picture seems to
 show.
+
+**What an "element" is here.** The spec describes these measurements over text
+elements and glyph runs. A framebuffer has no text in it — only pixels — so an
+element is any run of connected marks, and a rule, a border or a pair of watch
+hands counts as one. Three consequences worth knowing before trusting a number:
+
+  - A decorative rule is held to a text contrast floor. That is how `corner`'s
+    accent bar came to be reported against the 4.5:1 complication threshold.
+  - A design with a deliberate full-bleed edge reads as clipping.
+  - On an analogue Variant the hands, not any text, set the hierarchy ratio.
+
+Recovering real glyph runs would mean OCR against the framebuffer, which is a
+great deal of machinery for a sandbox. The measurements are still worth having —
+they catch what they are for — but they describe ink, and a finding against a
+Variant that draws non-text marks deserves a look at the picture before it is
+believed.
 """
 
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from studio import png
 
@@ -154,8 +170,12 @@ class Measurements:
                 'cut off'))
 
         if self.no_clear_primary:
+            # A flag, not a failure. Weak hierarchy is a judgment about whether
+            # the eye lands anywhere in particular, and a designer may well want
+            # a design with no single dominant element. Clipping and contrast are
+            # the measurements that make a Variant unusable; this one informs.
             found.append(Finding(
-                'glance hierarchy', FAILURE,
+                'glance hierarchy', FLAG,
                 'tallest element is only {:.2f}x the next, so there is no '
                 'clear primary'.format(self.glance_hierarchy)))
         elif self.glance_hierarchy_weak:
@@ -237,8 +257,11 @@ def _shares_a_line(first, second):
     return vertically_overlapping and gap <= GLYPH_GAP_PX
 
 
-def _elements(ink):
-    """Merge blobs that read as one run, tallest element first.
+def _element_groups(ink):
+    """Merge blobs that read as one run, tallest first.
+
+    Returns (bounds, pixels) pairs rather than Elements — colour, contrast and
+    which one is primary are decided by `measure`, which can see the image.
 
     Glyphs arrive as separate blobs, so a time like "10:09" would otherwise
     count as five elements and flatten the hierarchy ratio to 1.0.
@@ -282,7 +305,7 @@ def contrast_ratio(foreground, background):
     return (lighter + 0.05) / (darker + 0.05)
 
 
-def _local_ground(image, bounds, pixels, ink, fallback):
+def _local_ground(image, bounds, ink, fallback):
     """The dominant ground colour in a band just outside the element.
 
     Contrast is a local property: a design that inverts polarity halfway down
@@ -310,9 +333,9 @@ def measure(path):
     ink = _ink_pixels(image, background)
 
     elements = []
-    for index, (bounds, pixels) in enumerate(_elements(ink)):
+    for index, (bounds, pixels) in enumerate(_element_groups(ink)):
         mark = _dominant(pixels, image)
-        ground = _local_ground(image, bounds, pixels, ink, background)
+        ground = _local_ground(image, bounds, ink, background)
         elements.append(Element(
             *bounds,
             ink=mark,

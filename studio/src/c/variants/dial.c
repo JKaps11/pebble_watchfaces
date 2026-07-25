@@ -12,17 +12,12 @@
 // having it in a Batch.
 
 #include <pebble.h>
+#include "../studio_draw.h"
 #include "../variant.h"
 
 static Layer *s_dial_layer;
 static int s_hour;
 static int s_minute;
-
-static GPoint prv_point_at(GPoint centre, int32_t angle, int length) {
-  return GPoint(
-      centre.x + (int16_t)(sin_lookup(angle) * length / TRIG_MAX_RATIO),
-      centre.y - (int16_t)(cos_lookup(angle) * length / TRIG_MAX_RATIO));
-}
 
 static void prv_update(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
@@ -36,19 +31,18 @@ static void prv_update(Layer *layer, GContext *ctx) {
   for (int hour = 0; hour < 12; hour++) {
     int32_t angle = TRIG_MAX_ANGLE * hour / 12;
     int inset = (hour % 3 == 0) ? 12 : 6;
-    graphics_draw_line(ctx, prv_point_at(centre, angle, radius - inset),
-                       prv_point_at(centre, angle, radius));
+    graphics_draw_line(ctx, studio_point_at(centre, angle, radius - inset),
+                       studio_point_at(centre, angle, radius));
   }
 
-  int32_t hour_angle =
-      TRIG_MAX_ANGLE * ((s_hour % 12) * 60 + s_minute) / (12 * 60);
-  int32_t minute_angle = TRIG_MAX_ANGLE * s_minute / 60;
+  int32_t hour_angle = studio_hour_angle(s_hour, s_minute);
+  int32_t minute_angle = studio_minute_angle(s_minute);
 
   graphics_context_set_stroke_width(ctx, 6);
-  graphics_draw_line(ctx, centre, prv_point_at(centre, hour_angle, radius - 42));
+  graphics_draw_line(ctx, centre, studio_point_at(centre, hour_angle, radius - 42));
   graphics_context_set_stroke_width(ctx, 3);
   graphics_draw_line(ctx, centre,
-                     prv_point_at(centre, minute_angle, radius - 16));
+                     studio_point_at(centre, minute_angle, radius - 16));
 
   graphics_context_set_fill_color(ctx, GColorBlack);
   graphics_fill_circle(ctx, centre, 4);

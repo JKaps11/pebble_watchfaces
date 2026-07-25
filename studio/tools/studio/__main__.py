@@ -17,12 +17,14 @@ def _batch(args):
     result = batch.render_batch(
         args.session, args.variants,
         on_progress=lambda variant: print('rendered', variant, flush=True))
+    print('batch {} of session {}'.format(result['batch'], args.session))
     print('contact sheet:', result['contact_sheet'])
-    print('report:', report.build(args.session, variants=args.variants))
+    print('report:', report.build(args.session, variants=args.variants,
+                                  number=result['batch']))
 
 
 def _report(args):
-    print(report.build(args.session))
+    print(report.build(args.session, number=args.batch))
 
 
 def _pick(args):
@@ -58,6 +60,8 @@ def main(argv=None):
     report_command = commands.add_parser(
         'report', help='Rebuild the report for a Session already rendered.')
     report_command.add_argument('session')
+    report_command.add_argument('--batch', type=int, default=None,
+                                help='Defaults to the latest Batch.')
     report_command.set_defaults(handler=_report)
 
     pick_command = commands.add_parser(

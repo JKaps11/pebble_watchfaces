@@ -9,8 +9,8 @@
 // indecisive — which no measurement answers, so it needs to be looked at.
 
 #include <pebble.h>
+#include "../studio_draw.h"
 #include "../variant.h"
-#include "datetime_format.h"
 
 #define ACCENT GColorPictonBlue
 #define SPLIT_Y 116
@@ -21,12 +21,6 @@ static char s_time_text[16];
 static int s_hour;
 static int s_minute;
 
-static GPoint prv_point_at(GPoint centre, int32_t angle, int length) {
-  return GPoint(
-      centre.x + (int16_t)(sin_lookup(angle) * length / TRIG_MAX_RATIO),
-      centre.y - (int16_t)(cos_lookup(angle) * length / TRIG_MAX_RATIO));
-}
-
 static void prv_draw_dial(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
   GPoint centre = grect_center_point(&bounds);
@@ -36,16 +30,15 @@ static void prv_draw_dial(Layer *layer, GContext *ctx) {
   graphics_context_set_stroke_width(ctx, 2);
   graphics_draw_circle(ctx, centre, radius);
 
-  int32_t hour_angle =
-      TRIG_MAX_ANGLE * ((s_hour % 12) * 60 + s_minute) / (12 * 60);
-  int32_t minute_angle = TRIG_MAX_ANGLE * s_minute / 60;
+  int32_t hour_angle = studio_hour_angle(s_hour, s_minute);
+  int32_t minute_angle = studio_minute_angle(s_minute);
 
   graphics_context_set_stroke_color(ctx, GColorWhite);
   graphics_context_set_stroke_width(ctx, 5);
-  graphics_draw_line(ctx, centre, prv_point_at(centre, hour_angle, radius - 20));
+  graphics_draw_line(ctx, centre, studio_point_at(centre, hour_angle, radius - 20));
   graphics_context_set_stroke_width(ctx, 3);
   graphics_draw_line(ctx, centre,
-                     prv_point_at(centre, minute_angle, radius - 7));
+                     studio_point_at(centre, minute_angle, radius - 7));
 }
 
 static void prv_load(Window *window) {
@@ -57,14 +50,10 @@ static void prv_load(Window *window) {
   layer_set_update_proc(s_dial_layer, prv_draw_dial);
   layer_add_child(window_layer, s_dial_layer);
 
-  s_time_layer = text_layer_create(
-      GRect(0, SPLIT_Y + 22, bounds.size.w, 52));
-  text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorWhite);
-  text_layer_set_font(s_time_layer,
-                      fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));
-  text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+  s_time_layer = studio_text_layer(
+      window_layer, GRect(0, SPLIT_Y + 22, bounds.size.w, 52),
+      fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS),
+      GColorWhite, GTextAlignmentCenter);
 }
 
 static void prv_unload(Window *window) {
@@ -73,15 +62,7 @@ static void prv_unload(Window *window) {
 }
 
 static void prv_tick(struct tm *now) {
-  DateTimeInfo info = {
-    .hour = now->tm_hour,
-    .minute = now->tm_min,
-    .weekday = now->tm_wday,
-    .month = now->tm_mon,
-    .day_of_month = now->tm_mday,
-  };
-  datetime_format_time(&info, clock_is_24h_style(), s_time_text,
-                       sizeof(s_time_text));
+  studio_format(now, s_time_text, sizeof(s_time_text), NULL, 0);
   text_layer_set_text(s_time_layer, s_time_text);
 
   s_hour = now->tm_hour;

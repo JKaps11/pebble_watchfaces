@@ -10,8 +10,8 @@
 // worth seeing rather than none or many.
 
 #include <pebble.h>
+#include "../studio_draw.h"
 #include "../variant.h"
-#include "datetime_format.h"
 
 #define ACCENT GColorOrange
 
@@ -27,15 +27,10 @@ static void prv_draw_rule(Layer *layer, GContext *ctx) {
   graphics_fill_rect(ctx, GRect(0, 0, 56, bounds.size.h), 0, GCornerNone);
 }
 
-static TextLayer *prv_text_layer(Layer *parent, GRect frame, const char *font,
-                                 GColor colour) {
-  TextLayer *layer = text_layer_create(frame);
-  text_layer_set_background_color(layer, GColorClear);
-  text_layer_set_text_color(layer, colour);
-  text_layer_set_font(layer, fonts_get_system_font(font));
-  text_layer_set_text_alignment(layer, GTextAlignmentLeft);
-  layer_add_child(parent, text_layer_get_layer(layer));
-  return layer;
+static TextLayer *prv_left(Layer *parent, GRect frame, const char *font_key,
+                           GColor colour) {
+  return studio_text_layer(parent, frame, fonts_get_system_font(font_key),
+                           colour, GTextAlignmentLeft);
 }
 
 static void prv_load(Window *window) {
@@ -47,10 +42,10 @@ static void prv_load(Window *window) {
   layer_set_update_proc(s_rule_layer, prv_draw_rule);
   layer_add_child(window_layer, s_rule_layer);
 
-  s_date_layer = prv_text_layer(window_layer,
+  s_date_layer = prv_left(window_layer,
                                 GRect(14, 132, bounds.size.w - 20, 24),
                                 FONT_KEY_GOTHIC_18_BOLD, GColorBlack);
-  s_time_layer = prv_text_layer(window_layer,
+  s_time_layer = prv_left(window_layer,
                                 GRect(10, 156, bounds.size.w - 16, 52),
                                 FONT_KEY_LECO_42_NUMBERS, GColorBlack);
 }
@@ -62,16 +57,8 @@ static void prv_unload(Window *window) {
 }
 
 static void prv_tick(struct tm *now) {
-  DateTimeInfo info = {
-    .hour = now->tm_hour,
-    .minute = now->tm_min,
-    .weekday = now->tm_wday,
-    .month = now->tm_mon,
-    .day_of_month = now->tm_mday,
-  };
-  datetime_format_time(&info, clock_is_24h_style(), s_time_text,
-                       sizeof(s_time_text));
-  datetime_format_date(&info, s_date_text, sizeof(s_date_text));
+  studio_format(now, s_time_text, sizeof(s_time_text),
+                s_date_text, sizeof(s_date_text));
   text_layer_set_text(s_time_layer, s_time_text);
   text_layer_set_text(s_date_layer, s_date_text);
 }

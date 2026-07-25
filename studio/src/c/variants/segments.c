@@ -10,8 +10,8 @@
 
 #include <pebble.h>
 #include "../studio_font.h"
+#include "../studio_draw.h"
 #include "../variant.h"
-#include "datetime_format.h"
 
 static TextLayer *s_time_layer;
 static TextLayer *s_date_layer;
@@ -23,20 +23,16 @@ static void prv_load(Window *window) {
   GRect bounds = layer_get_bounds(window_layer);
   window_set_background_color(window, GColorBlack);
 
-  s_time_layer = text_layer_create(GRect(0, 76, bounds.size.w, 56));
-  text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorWhite);
-  text_layer_set_font(s_time_layer, studio_font(RESOURCE_ID_FONT_WALLPOET_44));
-  text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+  s_time_layer = studio_text_layer(
+      window_layer, GRect(0, 76, bounds.size.w, 56),
+      studio_font(RESOURCE_ID_FONT_WALLPOET_44),
+      GColorWhite, GTextAlignmentCenter);
 
   // The custom faces are subset to digits, so the date stays on a system font.
-  s_date_layer = text_layer_create(GRect(0, 140, bounds.size.w, 26));
-  text_layer_set_background_color(s_date_layer, GColorClear);
-  text_layer_set_text_color(s_date_layer, GColorWhite);
-  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-  text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
+  s_date_layer = studio_text_layer(
+      window_layer, GRect(0, 140, bounds.size.w, 26),
+      fonts_get_system_font(FONT_KEY_GOTHIC_18),
+      GColorWhite, GTextAlignmentCenter);
 }
 
 static void prv_unload(Window *window) {
@@ -45,16 +41,8 @@ static void prv_unload(Window *window) {
 }
 
 static void prv_tick(struct tm *now) {
-  DateTimeInfo info = {
-    .hour = now->tm_hour,
-    .minute = now->tm_min,
-    .weekday = now->tm_wday,
-    .month = now->tm_mon,
-    .day_of_month = now->tm_mday,
-  };
-  datetime_format_time(&info, clock_is_24h_style(), s_time_text,
-                       sizeof(s_time_text));
-  datetime_format_date(&info, s_date_text, sizeof(s_date_text));
+  studio_format(now, s_time_text, sizeof(s_time_text),
+                s_date_text, sizeof(s_date_text));
   text_layer_set_text(s_time_layer, s_time_text);
   text_layer_set_text(s_date_layer, s_date_text);
 }

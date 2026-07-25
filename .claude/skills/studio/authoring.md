@@ -54,6 +54,11 @@ to fit the resource budget. Use them for the time; use a system font for the dat
 or any label. Load with `studio_font(RESOURCE_ID_FONT_WALLPOET_44)` from
 `../studio_font.h` — never `fonts_load_custom_font` directly, or the font leaks.
 
+A consequence worth knowing: the Stress state's long strings — `Wed Sep 30` — are
+always set in a system font, so a custom-face Variant is stress-tested on its
+date rather than on its numerals. The type axis is still being explored honestly;
+the widest thing on screen just is not the custom face.
+
 **Numerals-only system fonts.** `FONT_KEY_LECO_42_NUMBERS` and
 `FONT_KEY_BITHAM_42_MEDIUM_NUMBERS` have digits and punctuation only. A date set
 in one renders blank.

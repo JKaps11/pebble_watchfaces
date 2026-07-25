@@ -46,6 +46,50 @@ class BatchShapeTest(unittest.TestCase):
 
 
 
+class SeveralBatchesPerSessionTest(unittest.TestCase):
+    """A Session is one sitting against a brief and may hold several Batches.
+
+    Asking for another when the first feels thin is the ordinary way to use the
+    Studio, so the second must not land on top of the first.
+    """
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        patched = mock.patch.object(batch, 'SESSIONS_DIR', directory.name)
+        patched.start()
+        self.addCleanup(patched.stop)
+        self.session = 'test-session'
+
+    def test_a_fresh_session_starts_at_batch_one(self):
+        self.assertEqual(batch.batch_numbers(self.session), [])
+        self.assertEqual(batch.next_batch_number(self.session), 1)
+
+    def test_each_batch_gets_its_own_directory(self):
+        self.assertNotEqual(batch.batch_dir(self.session, 1),
+                            batch.batch_dir(self.session, 2))
+
+    def test_renders_from_different_batches_do_not_collide(self):
+        self.assertNotEqual(batch.render_path(self.session, 1, 'plain', 'canonical'),
+                            batch.render_path(self.session, 2, 'plain', 'canonical'))
+
+    def test_the_next_batch_follows_the_ones_already_recorded(self):
+        for number in (1, 2):
+            os.makedirs(batch.batch_dir(self.session, number))
+        self.assertEqual(batch.batch_numbers(self.session), [1, 2])
+        self.assertEqual(batch.next_batch_number(self.session), 3)
+
+    def test_reading_a_manifest_defaults_to_the_latest_batch(self):
+        for number in (1, 2):
+            os.makedirs(batch.batch_dir(self.session, number))
+            with open(os.path.join(batch.batch_dir(self.session, number),
+                                   batch.MANIFEST_NAME), 'w') as handle:
+                json.dump({'batch': number, 'variants': []}, handle)
+
+        self.assertEqual(batch.read_manifest(self.session)['batch'], 2)
+        self.assertEqual(batch.read_manifest(self.session, 1)['batch'], 1)
+
+
 class ContactSheetTest(unittest.TestCase):
     """The sheet compares designs, so it must show one state and label each tile."""
 
@@ -67,7 +111,7 @@ class ContactSheetTest(unittest.TestCase):
                 colour = (10 * index + (0 if state_name == 'canonical' else 5),
                           20, 30)
                 self.colours[(variant, state_name)] = colour
-                path = batch.render_path(self.session, variant, state_name)
+                path = batch.render_path(self.session, 1, variant, state_name)
                 os.makedirs(os.path.dirname(path), exist_ok=True)
                 png.write(
                     png.Image(WIDTH, HEIGHT,
@@ -75,7 +119,7 @@ class ContactSheetTest(unittest.TestCase):
                     path)
 
     def test_the_sheet_is_built_from_the_canonical_renders(self):
-        sheet = batch.contact_sheet(self.session, SIX)
+        sheet = batch.contact_sheet(self.session, 1, SIX)
         present = {colour for _, _, colour in png.read(sheet).pixels()}
 
         for variant in SIX:
@@ -83,7 +127,7 @@ class ContactSheetTest(unittest.TestCase):
                           '{} is missing from the contact sheet'.format(variant))
 
     def test_stress_renders_never_reach_the_sheet(self):
-        sheet = batch.contact_sheet(self.session, SIX)
+        sheet = batch.contact_sheet(self.session, 1, SIX)
         present = {colour for _, _, colour in png.read(sheet).pixels()}
 
         for variant in SIX:
@@ -92,7 +136,7 @@ class ContactSheetTest(unittest.TestCase):
                                  variant))
 
     def test_the_sheet_is_wider_than_it_is_tall_because_it_tiles_three_by_two(self):
-        sheet = png.read(batch.contact_sheet(self.session, SIX))
+        sheet = png.read(batch.contact_sheet(self.session, 1, SIX))
         self.assertGreater(sheet.width, sheet.height)
 
 
@@ -118,6 +162,10 @@ class LabelSourceTest(unittest.TestCase):
 
 @REQUIRES_EMULATOR
 class BatchRendersTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        render.assert_state_injection_works()
+
     def test_a_batch_produces_both_states_for_every_variant_and_a_sheet(self):
         with tempfile.TemporaryDirectory() as scratch:
             with mock.patch.object(batch, 'SESSIONS_DIR', scratch):
@@ -127,12 +175,14 @@ class BatchRendersTest(unittest.TestCase):
                     for state_name in states.BY_NAME:
                         self.assertTrue(
                             os.path.exists(
-                                batch.render_path('smoke', variant, state_name)),
+                                batch.render_path('smoke', 1, variant,
+                                                  state_name)),
                             'missing {} render for {}'.format(state_name, variant))
 
                 self.assertTrue(os.path.exists(result['contact_sheet']))
-                manifest = json.load(open(os.path.join(
-                    batch.session_dir('smoke'), batch.MANIFEST_NAME)))
+                with open(os.path.join(batch.batch_dir('smoke', 1),
+                                       batch.MANIFEST_NAME)) as handle:
+                    manifest = json.load(handle)
                 self.assertEqual([v['name'] for v in manifest['variants']], SIX)
 
 

@@ -42,12 +42,38 @@ def session_dir(session):
     return os.path.join(SESSIONS_DIR, session)
 
 
-def render_path(session, variant, state_name):
-    return os.path.join(session_dir(session), 'renders',
+def batch_dir(session, number):
+    """A Session holds one directory per Batch, numbered in the order run.
+
+    A Session is one sitting against a single brief and may contain several
+    Batches — asking for another when the first feels thin is the normal way to
+    use this, not an edge case. So a Batch cannot be the unit of storage, or the
+    second one silently overwrites the first's sheet and report.
+    """
+    return os.path.join(session_dir(session), 'batch-{}'.format(number))
+
+
+def batch_numbers(session):
+    """Which Batches a Session already holds, in order."""
+    try:
+        entries = os.listdir(session_dir(session))
+    except FileNotFoundError:
+        return []
+    return sorted(int(name.split('-')[1]) for name in entries
+                  if name.startswith('batch-') and name.split('-')[1].isdigit())
+
+
+def next_batch_number(session):
+    numbers = batch_numbers(session)
+    return numbers[-1] + 1 if numbers else 1
+
+
+def render_path(session, number, variant, state_name):
+    return os.path.join(batch_dir(session, number), 'renders',
                         '{}_{}.png'.format(variant, state_name))
 
 
-def _render_variant(session, variant):
+def _render_variant(session, number, variant):
     """Render one Variant at both states, checking the states actually landed.
 
     The check is free. A watchface shows the time, so its Canonical render and
@@ -58,16 +84,13 @@ def _render_variant(session, variant):
     as six Variants that mysteriously never clip.
     """
     wanted = [states.CANONICAL, states.STRESS]
-    produced = render.render_states(
-        variant, wanted,
-        lambda state: render_path(session, variant, state.name))
+    into = lambda state: render_path(session, number, variant, state.name)
+    produced = render.render_states(variant, wanted, into)
 
     canonical, stress = produced
     if render.renders_match(canonical, stress):
         render.assert_state_injection_works()
-        produced = render.render_states(
-            variant, wanted,
-            lambda state: render_path(session, variant, state.name))
+        produced = render.render_states(variant, wanted, into)
         if render.renders_match(*produced):
             raise render.StateNotHonoured(
                 'Variant {!r} renders identically at the Canonical and Stress '
@@ -76,14 +99,14 @@ def _render_variant(session, variant):
     return produced
 
 
-def contact_sheet(session, variants, output_path=None):
+def contact_sheet(session, number, variants, output_path=None):
     """Tile the Canonical renders three across and two down, each one labelled.
 
     Delegated to ImageMagick rather than done by hand: tiling and captioning is
     exactly what `montage` is for, and the Studio's own image code exists to
     measure renders, not to lay them out.
     """
-    output_path = output_path or os.path.join(session_dir(session),
+    output_path = output_path or os.path.join(batch_dir(session, number),
                                               CONTACT_SHEET_NAME)
     # -depth 8 because montage would otherwise write 16-bit channels, which is
     # four times the size for a sheet of 64-colour framebuffers and not something
@@ -94,7 +117,8 @@ def contact_sheet(session, variants, output_path=None):
     for variant in variants:
         positions = axes.positions_of(variant, render.VARIANTS_DIR)
         command += ['-label', axes.label(variant, positions),
-                    render_path(session, variant, states.CANONICAL.name)]
+                    render_path(session, number, variant,
+                                states.CANONICAL.name)]
     command += ['-tile', '{}x{}'.format(TILE_COLUMNS, TILE_ROWS),
                 '-geometry', '+10+10', output_path]
 
@@ -106,22 +130,24 @@ def contact_sheet(session, variants, output_path=None):
     return output_path
 
 
-def _write_manifest(session, variants):
+def _write_manifest(session, number, variants):
     """Record what was in the Batch, so the report and the sheet agree."""
     manifest = {
         'session': session,
+        'batch': number,
         'variants': [
             {
                 'name': variant,
                 'axes': axes.positions_of(variant, render.VARIANTS_DIR),
                 'renders': {state: os.path.relpath(
-                    render_path(session, variant, state), session_dir(session))
+                    render_path(session, number, variant, state),
+                    batch_dir(session, number))
                     for state in states.BY_NAME},
             }
             for variant in variants
         ],
     }
-    path = os.path.join(session_dir(session), MANIFEST_NAME)
+    path = os.path.join(batch_dir(session, number), MANIFEST_NAME)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w') as handle:
         json.dump(manifest, handle, indent=2)
@@ -129,9 +155,18 @@ def _write_manifest(session, variants):
     return manifest
 
 
-def read_manifest(session):
-    """What was in a Batch, as recorded when it was rendered."""
-    path = os.path.join(session_dir(session), MANIFEST_NAME)
+def read_manifest(session, number=None):
+    """What was in a Batch, as recorded when it was rendered.
+
+    Defaults to the Session's most recent Batch — the one a designer has just
+    been looking at.
+    """
+    if number is None:
+        numbers = batch_numbers(session)
+        if not numbers:
+            raise BatchError('No Batch in Session {!r}'.format(session))
+        number = numbers[-1]
+    path = os.path.join(batch_dir(session, number), MANIFEST_NAME)
     try:
         with open(path) as handle:
             return json.load(handle)
@@ -139,8 +174,12 @@ def read_manifest(session):
         raise BatchError('No Batch recorded at {}'.format(path)) from None
 
 
-def render_batch(session, variants, on_progress=None):
-    """Render a whole Batch into a Session and tile its Contact sheet."""
+def render_batch(session, variants, on_progress=None, number=None):
+    """Render a whole Batch into a Session and tile its Contact sheet.
+
+    Numbered within the Session, so asking for another Batch against the same
+    brief adds to the record rather than replacing it.
+    """
     variants = list(variants)
     if len(variants) != BATCH_SIZE:
         raise BatchError(
@@ -157,13 +196,17 @@ def render_batch(session, variants, on_progress=None):
     for variant in variants:
         axes.positions_of(variant, render.VARIANTS_DIR)
 
+    if number is None:
+        number = next_batch_number(session)
+
     render.assert_state_injection_works()
 
     for variant in variants:
-        _render_variant(session, variant)
+        _render_variant(session, number, variant)
         if on_progress:
             on_progress(variant)
 
-    manifest = _write_manifest(session, variants)
-    sheet = contact_sheet(session, variants)
-    return {'session': session, 'manifest': manifest, 'contact_sheet': sheet}
+    manifest = _write_manifest(session, number, variants)
+    sheet = contact_sheet(session, number, variants)
+    return {'session': session, 'batch': number, 'manifest': manifest,
+            'contact_sheet': sheet}

@@ -45,7 +45,7 @@ class ReportTestCase(unittest.TestCase):
         self.addCleanup(patched.stop)
 
     def place(self, variant, state_name, canvas):
-        path = batch.render_path(self.session, variant, state_name)
+        path = batch.render_path(self.session, 1, variant, state_name)
         os.makedirs(os.path.dirname(path), exist_ok=True)
         canvas.write(os.path.dirname(path), os.path.basename(path))
 
@@ -115,7 +115,7 @@ class ReportShapeTest(ReportTestCase):
         path = report.build(self.session, variants=[CLEAN])
 
         self.assertEqual(os.path.dirname(path),
-                         batch.session_dir(self.session))
+                         batch.batch_dir(self.session, 1))
         with open(path) as handle:
             self.assertIn(batch.CONTACT_SHEET_NAME, handle.read())
 
@@ -143,12 +143,13 @@ class CritiqueAndPickTest(ReportTestCase):
         self.place_both(OFFENDING, clean_canvas(), clipping_canvas())
         manifest = {'session': self.session,
                     'variants': [{'name': CLEAN}, {'name': OFFENDING}]}
-        path = os.path.join(batch.session_dir(self.session), batch.MANIFEST_NAME)
+        path = os.path.join(batch.batch_dir(self.session, 1),
+                            batch.MANIFEST_NAME)
         with open(path, 'w') as handle:
             json.dump(manifest, handle)
 
     def write_side_file(self, name, contents):
-        with open(os.path.join(batch.session_dir(self.session), name),
+        with open(os.path.join(batch.batch_dir(self.session, 1), name),
                   'w') as handle:
             json.dump(contents, handle)
 
@@ -182,11 +183,16 @@ class CritiqueAndPickTest(ReportTestCase):
 
     def test_picking_produces_no_further_artefact(self):
         # Picking records the pick and ends the Session. Nothing else.
-        before = set(os.listdir(batch.session_dir(self.session)))
+        before = set(os.listdir(batch.batch_dir(self.session, 1)))
+        session_before = set(os.listdir(batch.session_dir(self.session)))
         report.record_pick(self.session, CLEAN)
-        after = set(os.listdir(batch.session_dir(self.session)))
 
-        self.assertEqual(after - before, {report.PICK_NAME, report.REPORT_NAME})
+        self.assertEqual(
+            set(os.listdir(batch.batch_dir(self.session, 1))) - before,
+            {report.REPORT_NAME})
+        self.assertEqual(
+            set(os.listdir(batch.session_dir(self.session))) - session_before,
+            {report.PICK_NAME})
 
 
 if __name__ == '__main__':

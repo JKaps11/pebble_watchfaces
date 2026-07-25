@@ -60,6 +60,14 @@ class ClockInjectionTest(unittest.TestCase):
 
 @REQUIRES_EMULATOR
 class RenderAgainstReferenceTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Start from an emulator known to be honouring state. It degrades as
+        # renders accumulate, and these tests compare against fixed references,
+        # so without this they fail for the emulator's reasons rather than the
+        # code's — which is the definition of a flaky test.
+        render.assert_state_injection_works()
+
     def test_each_state_renders_to_its_known_good_reference(self):
         with tempfile.TemporaryDirectory() as scratch:
             produced = render.render_states(

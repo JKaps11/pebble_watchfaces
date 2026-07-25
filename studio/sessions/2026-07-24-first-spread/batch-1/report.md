@@ -1,4 +1,4 @@
-# Session 2026-07-24-first-spread
+# Session 2026-07-24-first-spread — Batch 1
 
 ![Contact sheet](contact-sheet.png)
 

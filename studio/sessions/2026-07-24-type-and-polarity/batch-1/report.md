@@ -1,4 +1,4 @@
-# Session 2026-07-24-type-and-polarity
+# Session 2026-07-24-type-and-polarity — Batch 1
 
 ![Contact sheet](contact-sheet.png)
 
