@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-golf",
+  "batch": 2,
+  "variants": [
+    {
+      "name": "sunrise",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/sunrise_canonical.png",
+        "stress": "renders/sunrise_stress.png"
+      }
+    },
+    {
+      "name": "linksland",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "LECO",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/linksland_canonical.png",
+        "stress": "renders/linksland_stress.png"
+      }
+    },
+    {
+      "name": "approach",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/approach_canonical.png",
+        "stress": "renders/approach_stress.png"
+      }
+    },
+    {
+      "name": "sprinkler",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "Bitham",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/sprinkler_canonical.png",
+        "stress": "renders/sprinkler_stress.png"
+      }
+    },
+    {
+      "name": "teemarker",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/teemarker_canonical.png",
+        "stress": "renders/teemarker_stress.png"
+      }
+    },
+    {
+      "name": "plaque",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "LECO",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/plaque_canonical.png",
+        "stress": "renders/plaque_stress.png"
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-24-terminal-spread",
+  "batch": 1,
+  "variants": [
+    {
+      "name": "ghostty",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "mono",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/ghostty_canonical.png",
+        "stress": "renders/ghostty_stress.png"
+      }
+    },
+    {
+      "name": "phosphor",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/phosphor_canonical.png",
+        "stress": "renders/phosphor_stress.png"
+      }
+    },
+    {
+      "name": "prompt",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "Bitham",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/prompt_canonical.png",
+        "stress": "renders/prompt_stress.png"
+      }
+    },
+    {
+      "name": "teletype",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "mono",
+        "type": "Gothic",
+        "polarity": "dark-on-light"
+      },
+      "renders": {
+        "canonical": "renders/teletype_canonical.png",
+        "stress": "renders/teletype_stress.png"
+      }
+    },
+    {
+      "name": "statusline",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "LECO",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/statusline_canonical.png",
+        "stress": "renders/statusline_stress.png"
+      }
+    },
+    {
+      "name": "syntax",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/syntax_canonical.png",
+        "stress": "renders/syntax_stress.png"
+      }
+    }
+  ]
+}

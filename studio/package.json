@@ -49,6 +49,24 @@
           "name": "FONT_WALLPOET_44",
           "file": "fonts/Wallpoet-Regular.ttf",
           "characterRegex": "[0-9: APM]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_MONO_14",
+          "file": "fonts/ShareTechMono-Regular.ttf",
+          "characterRegex": "[0-9A-Z:;,.$#%+*<>=|_ -]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_MONO_18",
+          "file": "fonts/ShareTechMono-Regular.ttf",
+          "characterRegex": "[0-9A-Z:;,.$#%+*<>=|_ -]"
+        },
+        {
+          "type": "font",
+          "name": "FONT_MONO_24",
+          "file": "fonts/ShareTechMono-Regular.ttf",
+          "characterRegex": "[0-9A-Z:;,.$#%+*<>=|_ -]"
         }
       ]
     }

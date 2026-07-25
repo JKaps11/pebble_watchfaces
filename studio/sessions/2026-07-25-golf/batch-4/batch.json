@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-golf",
+  "batch": 4,
+  "variants": [
+    {
+      "name": "crest",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/crest_canonical.png",
+        "stress": "renders/crest_stress.png"
+      }
+    },
+    {
+      "name": "teebox",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/teebox_canonical.png",
+        "stress": "renders/teebox_stress.png"
+      }
+    },
+    {
+      "name": "greenside",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/greenside_canonical.png",
+        "stress": "renders/greenside_stress.png"
+      }
+    },
+    {
+      "name": "pinhigh",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/pinhigh_canonical.png",
+        "stress": "renders/pinhigh_stress.png"
+      }
+    },
+    {
+      "name": "signpost",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/signpost_canonical.png",
+        "stress": "renders/signpost_stress.png"
+      }
+    },
+    {
+      "name": "dusk",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/dusk_canonical.png",
+        "stress": "renders/dusk_stress.png"
+      }
+    }
+  ]
+}

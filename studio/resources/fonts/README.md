@@ -32,7 +32,16 @@ Add it to `resources.media` in `../../package.json` as a `font` entry named
 `FONT_<NAME>_<SIZE>`, keep the `characterRegex` tight, and record it above with
 its licence. Variants then reach it through `studio_font()`.
 
-The `characterRegex` is `[0-9: APM]` throughout. The whole charset at 44 px would
-cost tens of kilobytes each against Emery's 256 KB resource budget, and the type
-axis is about the face carrying the time — a date or a label should use a system
-font.
+The `characterRegex` is `[0-9: APM]` for every face carrying the time at display
+size. The whole charset at 44 px would cost tens of kilobytes each against
+Emery's 256 KB resource budget, and the type axis is about the face carrying the
+time — a date or a label should use a system font.
+
+`FONT_MONO_14/18/24` are the exception, and the reason is worth knowing. They are
+Share Tech Mono subset to uppercase, digits and punctuation, because a brief can
+ask for a look that a system font cannot supply at all: Pebble has no monospace
+family, so anything wanting text to fall into columns — a listing, a register
+dump, a table — has to bring its own. Letters are affordable here only because
+these are 14–24 px rather than 44, where the same subset would not fit. Lowercase
+is deliberately absent: it is half the glyphs again for a look that is uppercase
+anyway, so Variants using these uppercase their date strings.

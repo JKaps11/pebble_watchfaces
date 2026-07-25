@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-golf",
+  "batch": 3,
+  "variants": [
+    {
+      "name": "band",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/band_canonical.png",
+        "stress": "renders/band_stress.png"
+      }
+    },
+    {
+      "name": "skyline",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/skyline_canonical.png",
+        "stress": "renders/skyline_stress.png"
+      }
+    },
+    {
+      "name": "verge",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/verge_canonical.png",
+        "stress": "renders/verge_stress.png"
+      }
+    },
+    {
+      "name": "caddy",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/caddy_canonical.png",
+        "stress": "renders/caddy_stress.png"
+      }
+    },
+    {
+      "name": "stack",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/stack_canonical.png",
+        "stress": "renders/stack_stress.png"
+      }
+    },
+    {
+      "name": "overlay",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/overlay_canonical.png",
+        "stress": "renders/overlay_stress.png"
+      }
+    }
+  ]
+}

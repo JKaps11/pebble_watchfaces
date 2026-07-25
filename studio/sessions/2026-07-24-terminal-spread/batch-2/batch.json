@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-24-terminal-spread",
+  "batch": 2,
+  "variants": [
+    {
+      "name": "bare",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "0",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/bare_canonical.png",
+        "stress": "renders/bare_stress.png"
+      }
+    },
+    {
+      "name": "cell",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/cell_canonical.png",
+        "stress": "renders/cell_stress.png"
+      }
+    },
+    {
+      "name": "gauge",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/gauge_canonical.png",
+        "stress": "renders/gauge_stress.png"
+      }
+    },
+    {
+      "name": "blocks",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/blocks_canonical.png",
+        "stress": "renders/blocks_stress.png"
+      }
+    },
+    {
+      "name": "console",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "3-4",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/console_canonical.png",
+        "stress": "renders/console_stress.png"
+      }
+    },
+    {
+      "name": "readout",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "5+",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/readout_canonical.png",
+        "stress": "renders/readout_stress.png"
+      }
+    }
+  ]
+}

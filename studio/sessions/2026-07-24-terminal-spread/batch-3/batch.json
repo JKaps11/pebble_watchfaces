@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-24-terminal-spread",
+  "batch": 3,
+  "variants": [
+    {
+      "name": "opcode",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "0",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/opcode_canonical.png",
+        "stress": "renders/opcode_stress.png"
+      }
+    },
+    {
+      "name": "listing",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/listing_canonical.png",
+        "stress": "renders/listing_stress.png"
+      }
+    },
+    {
+      "name": "symtab",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "5+",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/symtab_canonical.png",
+        "stress": "renders/symtab_stress.png"
+      }
+    },
+    {
+      "name": "registers",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "3-4",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/registers_canonical.png",
+        "stress": "renders/registers_stress.png"
+      }
+    },
+    {
+      "name": "monitor",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/monitor_canonical.png",
+        "stress": "renders/monitor_stress.png"
+      }
+    },
+    {
+      "name": "vector",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/vector_canonical.png",
+        "stress": "renders/vector_stress.png"
+      }
+    }
+  ]
+}

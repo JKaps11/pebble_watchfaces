@@ -1,0 +1,55 @@
+# Session 2026-07-24-terminal-spread — Batch 3
+
+![Contact sheet](contact-sheet.png)
+
+## Findings
+
+Only failures and flags appear here. A Variant with nothing against it measured clean.
+
+### opcode
+
+`digital · corner-anchored · 0 · one-hue · custom · light-on-dark`
+
+- **glance hierarchy** — tallest element is only 1.07x the next, so there is no clear primary _(at the canonical state)_
+
+The scaffolding does the work: ORG, RET and END make five lines read as source rather than as decoration arranged around a clock, and it is the most legible time on the sheet. But with nothing else on screen the lower two thirds is empty and the assembly framing has nothing left to frame — it proves the idea and then has nowhere to go.
+
+### listing
+
+`digital · corner-anchored · 1-2 · one-hue · custom · light-on-dark`
+
+- **glance hierarchy** — tallest element is only 1.00x the next, so there is no clear primary _(at the canonical state)_
+
+The most committed to the conceit and the tile that pays hardest for it. The four-column grid is genuinely handsome and the opcode bytes are real — 3E is LD A,n, C9 is RET — but with the time as the fourth column of the second row, finding it takes a deliberate read every single time. A watch you have to parse has failed at the one thing it does.
+
+### symtab
+
+`digital · corner-anchored · 5+ · one-hue · custom · light-on-dark`
+
+- **glance hierarchy** — tallest element is only 1.00x the next, so there is no clear primary _(at the canonical state)_
+
+The vindication of the format. These are the same six fields that made `readout` look cluttered in Batch 2, and they read as orderly here because a symbol table is supposed to be a long column of names against values — the density finally has a reason to exist. The strongest argument in the Batch that assembly is a direction rather than a costume.
+
+### registers
+
+`digital · split · 3-4 · one-hue · custom · light-on-dark`
+
+- **glance hierarchy** — tallest element is only 1.00x the next, so there is no clear primary _(at the canonical state)_
+
+The split does not survive losing the divider. The gutter is too narrow to separate the two banks, so six rows collapse into a single four-column table and the declared composition is not what you see. Widening the gutter would probably fix it, but as rendered it is the weakest tile here.
+
+### monitor
+
+`digital · centred · 1-2 · one-hue · custom · light-on-dark`
+
+- **glance hierarchy** — tallest element is only 1.00x the next, so there is no clear primary _(at the canonical state)_
+
+Centring the block while leaving the text inside it left-aligned works better than it deserves to — the address column stays straight and it still reads as a dump rather than a poster. It is also the most inert tile on the sheet: a small block of text floating in a large black field looks placed rather than printed, which is the opposite of how a listing should feel.
+
+### vector
+
+`digital · asymmetric · 1-2 · one-hue · custom · light-on-dark`
+
+- **glance hierarchy** — tallest element is only 1.00x the next, so there is no clear primary _(at the canonical state)_
+
+The only tile that keeps any hierarchy at all, and it buys it cheaply — one size step on the time line, no rule, and nothing anyone would call big. The label-against-body imbalance is the most confidently composed thing here, and the empty upper right reads as deliberate rather than left over.

@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-golf",
+  "batch": 1,
+  "variants": [
+    {
+      "name": "fairway",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/fairway_canonical.png",
+        "stress": "renders/fairway_stress.png"
+      }
+    },
+    {
+      "name": "scorecard",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/scorecard_canonical.png",
+        "stress": "renders/scorecard_stress.png"
+      }
+    },
+    {
+      "name": "putting",
+      "axes": {
+        "time-display": "analogue",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "Gothic",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/putting_canonical.png",
+        "stress": "renders/putting_stress.png"
+      }
+    },
+    {
+      "name": "flagstick",
+      "axes": {
+        "time-display": "hybrid",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "Bitham",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/flagstick_canonical.png",
+        "stress": "renders/flagstick_stress.png"
+      }
+    },
+    {
+      "name": "dimples",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/dimples_canonical.png",
+        "stress": "renders/dimples_stress.png"
+      }
+    },
+    {
+      "name": "yardage",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "one-hue",
+        "type": "LECO",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/yardage_canonical.png",
+        "stress": "renders/yardage_stress.png"
+      }
+    }
+  ]
+}
