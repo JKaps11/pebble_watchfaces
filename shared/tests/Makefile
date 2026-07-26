@@ -6,7 +6,7 @@ UNITY := vendor/unity/unity.c
 
 # One binary per suite: Unity gives each test file its own main, so they cannot
 # be linked together.
-SUITES := datetime_format golf_perspective
+SUITES := datetime_format golf_perspective rocket_geometry
 BINS := $(addprefix $(BUILD_DIR)/test_,$(SUITES))
 
 .PHONY: test clean

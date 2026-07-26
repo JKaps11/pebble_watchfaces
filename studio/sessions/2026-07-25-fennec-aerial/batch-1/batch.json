@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-fennec-aerial",
+  "batch": 1,
+  "variants": [
+    {
+      "name": "fennec",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/fennec_canonical.png",
+        "stress": "renders/fennec_stress.png"
+      }
+    },
+    {
+      "name": "tornado",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/tornado_canonical.png",
+        "stress": "renders/tornado_stress.png"
+      }
+    },
+    {
+      "name": "airroll",
+      "axes": {
+        "time-display": "hybrid",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "Bitham",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/airroll_canonical.png",
+        "stress": "renders/airroll_stress.png"
+      }
+    },
+    {
+      "name": "flipreset",
+      "axes": {
+        "time-display": "analogue",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "Gothic",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/flipreset_canonical.png",
+        "stress": "renders/flipreset_stress.png"
+      }
+    },
+    {
+      "name": "ceiling",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/ceiling_canonical.png",
+        "stress": "renders/ceiling_stress.png"
+      }
+    },
+    {
+      "name": "cyclone",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/cyclone_canonical.png",
+        "stress": "renders/cyclone_stress.png"
+      }
+    }
+  ]
+}

@@ -4,3 +4,6 @@ node_modules/
 .lock-waf_*
 __pycache__/
 *.pyc
+
+# Compiled font resources, generated into <watchface>/shared/ by pebble build.
+*.reso

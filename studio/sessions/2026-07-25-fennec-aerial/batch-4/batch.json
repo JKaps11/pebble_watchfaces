@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-fennec-aerial",
+  "batch": 4,
+  "variants": [
+    {
+      "name": "goalmouth",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/goalmouth_canonical.png",
+        "stress": "renders/goalmouth_stress.png"
+      }
+    },
+    {
+      "name": "liftoff",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/liftoff_canonical.png",
+        "stress": "renders/liftoff_stress.png"
+      }
+    },
+    {
+      "name": "apex",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/apex_canonical.png",
+        "stress": "renders/apex_stress.png"
+      }
+    },
+    {
+      "name": "lowline",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/lowline_canonical.png",
+        "stress": "renders/lowline_stress.png"
+      }
+    },
+    {
+      "name": "blueprint",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "mono",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/blueprint_canonical.png",
+        "stress": "renders/blueprint_stress.png"
+      }
+    },
+    {
+      "name": "offside",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/offside_canonical.png",
+        "stress": "renders/offside_stress.png"
+      }
+    }
+  ]
+}

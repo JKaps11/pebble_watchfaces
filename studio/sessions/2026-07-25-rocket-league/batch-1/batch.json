@@ -1,0 +1,96 @@
+{
+  "session": "2026-07-25-rocket-league",
+  "batch": 1,
+  "variants": [
+    {
+      "name": "octane",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/octane_canonical.png",
+        "stress": "renders/octane_stress.png"
+      }
+    },
+    {
+      "name": "kickoff",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "0",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/kickoff_canonical.png",
+        "stress": "renders/kickoff_stress.png"
+      }
+    },
+    {
+      "name": "scoreboard",
+      "axes": {
+        "time-display": "digital",
+        "composition": "split",
+        "complications": "3-4",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/scoreboard_canonical.png",
+        "stress": "renders/scoreboard_stress.png"
+      }
+    },
+    {
+      "name": "backboard",
+      "axes": {
+        "time-display": "digital",
+        "composition": "centred",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "LECO",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/backboard_canonical.png",
+        "stress": "renders/backboard_stress.png"
+      }
+    },
+    {
+      "name": "boostgauge",
+      "axes": {
+        "time-display": "digital",
+        "composition": "corner-anchored",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "Bitham",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/boostgauge_canonical.png",
+        "stress": "renders/boostgauge_stress.png"
+      }
+    },
+    {
+      "name": "supersonic",
+      "axes": {
+        "time-display": "digital",
+        "composition": "asymmetric",
+        "complications": "1-2",
+        "hue": "multi",
+        "type": "custom",
+        "polarity": "light-on-dark"
+      },
+      "renders": {
+        "canonical": "renders/supersonic_canonical.png",
+        "stress": "renders/supersonic_stress.png"
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "liftoff",
+  "author": "Joshua Kaplan",
+  "version": "1.0.0",
+  "keywords": [
+    "pebble-app"
+  ],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "liftoff",
+    "uuid": "6f2b5f74-fcb2-4183-8ce7-5842aa766242",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "FONT_ARCHIVO_44",
+          "file": "../../../shared/resources/fonts/ArchivoBlack-Regular.ttf",
+          "characterRegex": "[0-9: APM]"
+        }
+      ]
+    }
+  }
+}
